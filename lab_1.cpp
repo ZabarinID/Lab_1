@@ -10,12 +10,6 @@ using namespace std;
 
 int main()
 {
-    LARGE_INTEGER t0;
-    LARGE_INTEGER t1;
-    LARGE_INTEGER fr;
-    QueryPerformanceCounter(&t0);
-
-
     OSVERSIONINFO os_info = { 0 };
     os_info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     GetVersionEx(&os_info);
@@ -48,8 +42,8 @@ int main()
         printf("\n            Path(1st): %s", path);
         if (GetDiskFreeSpaceEx(name, &free, &total, NULL)!= 0)
             {
-                printf("\n            Total size: %lld bytes", total.QuadPart);
-                printf("\n            Free space: %lld bytes\n\n", free.QuadPart);
+                printf("\n            Total size: %llu bytes", total.QuadPart);
+                printf("\n            Free space: %llu bytes\n\n", free.QuadPart);
             }
         else{
                 printf("\n            No space information available.\n\n");
@@ -82,11 +76,15 @@ int main()
     RegCloseKey(hkey);
 
 
-    QueryPerformanceCounter(&t1);
-    QueryPerformanceFrequency(&fr);
-    printf("\n2.1     Frequency:     %u  Hz\n", fr);
+    LARGE_INTEGER t0;
+    LARGE_INTEGER t1;
+    LARGE_INTEGER fr;
 
-    double time = 1000000 * (t1.QuadPart - t0.QuadPart) / fr.QuadPart;
+    QueryPerformanceCounter(&t0);
+    QueryPerformanceFrequency(&fr);
+    QueryPerformanceCounter(&t1);
+    printf("\n2.1     Frequency:     %llu  Hz\n", fr);
+    double time = 1000000 * (double(t1.QuadPart) - double(t0.QuadPart)) / double(fr.QuadPart);
     printf("2.2     Measured in:   %f us\n", time);
 
     return 0;
